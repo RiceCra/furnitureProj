@@ -2,19 +2,19 @@ package com.example.furnitureproj;
 
 public class layoutNode {
 
-    private double length;    //in feet, double to allow for 5.5 feet, etc
-    private String direction; //left, straight, right
+    private int length;    //in feet, double to allow for 5.5 feet, etc
+    private String direction; //left, up, right, down
     private String type;      //door, wall, window?
     public layoutNode next;
 
-    public layoutNode(double len, String dir, String t) {
+    public layoutNode(int len, String dir, String t) {
         length = len;
         direction = dir;
         type = t;
         next = null; //this is a doubly linked list
     }
 
-    public double getLength() {
+    public int getLength() {
         return length;
     }
 
