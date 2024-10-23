@@ -41,14 +41,23 @@ public class HelloApplication extends Application {
         Button btnScreen2 = new Button("Your Items");
         Button btnScreen3 = new Button("A.I. Assistant");
 
-        // Set button actions to switch between screens
-        btnScreen1.setOnAction(e -> switchScreen(mainContent, screen1));
-        btnScreen2.setOnAction(e -> switchScreen(mainContent, screen2));
-        btnScreen3.setOnAction(e -> switchScreen(mainContent, screen3));
-
         // Layout for buttons (bottom of the window)
         HBox buttonLayout = new HBox(); // Buttons will be placed horizontally
         buttonLayout.getChildren().addAll(btnScreen1, btnScreen2, btnScreen3);
+
+        // Set button actions to switch between screens
+        btnScreen1.setOnAction(e -> {
+            switchScreen(mainContent, screen1);
+            //buttonLayout.toFront();
+        });
+        btnScreen2.setOnAction(e -> {
+            switchScreen(mainContent, screen2);
+            //buttonLayout.toFront();
+        });
+        btnScreen2.setOnAction(e -> {
+            switchScreen(mainContent, screen3);
+            //buttonLayout.toFront();
+        });
 
         // Make each button take 1/3rd of the width of the window
         buttonLayout.widthProperty().addListener((obs, oldVal, newVal) -> {
@@ -97,29 +106,57 @@ public class HelloApplication extends Application {
 
     private void makeContent1() {
         // Screen 1 content
-        Rectangle rect = new spRectangle(100, 100, Color.RED);
-        Rectangle rect2 = new spRectangle(150, 75, Color.BLUE);
-        //rect.setRotate(45);
-        rect.setTranslateX(50);
-        rect.setTranslateY(50);
 
-        rect2.setTranslateX(60);
-        rect2.setTranslateY(60);
+        //bed
+        Rectangle rect = new spRectangle(7 * 30, 5 * 30, Color.GREY);
+
+        //desk
+        Rectangle rect2 = new spRectangle((int)(4.5 * 30), (int)(2.5 * 30), Color.BROWN);
+
+        //cloths
+        Rectangle rect3 = new spRectangle((int)(2 * 30), (int)(4 * 30), Color.GREEN);
+
+        //chair
+        Rectangle rect4 = new spRectangle((int)(2 * 30), (int)(2 * 30), Color.ORANGE);
+
+        //computer monitor
+        Rectangle rect5 = new spRectangle((int)(1.5 * 30), (int)(0.1 * 30), Color.BLACK);
+
+        //computer
+        Rectangle rect6 = new spRectangle((int)(2 * 30), (int)(0.5 * 30), Color.GREY);
+
+        //computer keyboard
+        Rectangle rect7 = new spRectangle((int)(2 * 30), (int)(2 * 30), Color.WHITE);
+
+        //rect.setRotate(45);
 
         room.getChildren().add(rect);
         room.getChildren().add(rect2);
+        room.getChildren().add(rect3);
+        room.getChildren().add(rect4);
+        room.getChildren().add(rect5);
+        room.getChildren().add(rect6);
+        room.getChildren().add(rect7);
 
     }
 
     private layoutNode createTestNodes() {
-        layoutNode newNode1 = new layoutNode(10, "right", "wall");
-        layoutNode newNode2 = new layoutNode(10, "down", "wall");
-        layoutNode newNode3 = new layoutNode(2, "left", "wall");
-        layoutNode newNode4 = new layoutNode(4, "down", "wall");
-        layoutNode newNode5 = new layoutNode(6, "left", "wall");
-        layoutNode newNode6 = new layoutNode(4, "up", "wall");
-        layoutNode newNode7 = new layoutNode(2, "left", "wall");
-        layoutNode newNode8 = new layoutNode(10, "up", "wall");
+        layoutNode newNode1 = new layoutNode(4, "right", "wall");
+        layoutNode newNode2 = new layoutNode(2.5, "up", "wall");
+        layoutNode newNode3 = new layoutNode(6, "right", "wall");
+        layoutNode newNode4 = new layoutNode(2.5, "down", "wall");
+        layoutNode newNode5 = new layoutNode(2.5, "right", "wall");
+        layoutNode newNode6 = new layoutNode(3, "down", "wall");
+        layoutNode newNode7 = new layoutNode(0.2, "right", "wall");
+        layoutNode newNode8 = new layoutNode(3, "up", "wall");
+        layoutNode newNode9 = new layoutNode(5, "right", "wall");
+        layoutNode newNode10 = new layoutNode(8, "down", "wall");
+        layoutNode newNode11 = new layoutNode(5, "left", "wall");
+        layoutNode newNode12 = new layoutNode(0.5, "up", "wall");
+        layoutNode newNode13 = new layoutNode(0.2, "left", "wall");
+        layoutNode newNode14 = new layoutNode(2.5, "down", "wall");
+        layoutNode newNode15 = new layoutNode(12.5, "left", "wall");
+        layoutNode newNode16 = new layoutNode(10, "up", "wall");
 
         newNode1.next = newNode2;
         newNode2.next = newNode3;
@@ -128,9 +165,19 @@ public class HelloApplication extends Application {
         newNode5.next = newNode6;
         newNode6.next = newNode7;
         newNode7.next = newNode8;
+        newNode8.next = newNode9;
+        newNode9.next = newNode10;
+        newNode10.next = newNode11;
+        newNode11.next = newNode12;
+        newNode12.next = newNode13;
+        newNode13.next = newNode14;
+        newNode14.next = newNode15;
+        newNode15.next = newNode15;
+        newNode15.next = newNode16;
 
         return newNode1;
     }
+
     private void drawRoom() {
         layoutNode newNode = createTestNodes();
 
@@ -142,14 +189,14 @@ public class HelloApplication extends Application {
 
         layoutNode curr = newNode;
         while (curr != null) {
-            if (curr.getDirection() == "left") {
-                roomX = roomX - curr.getLength()*20;
-            } else if (curr.getDirection() == "right") {
-                roomX = roomX + curr.getLength()*20;
-            } else if (curr.getDirection() == "up") {
-                roomY = roomY - curr.getLength()*20;
+            if (curr.getDirection().equals("left")) {
+                roomX = roomX - (int)(curr.getLength()*30);
+            } else if (curr.getDirection().equals("right")) {
+                roomX = roomX + (int)(curr.getLength()*30);
+            } else if (curr.getDirection().equals("up")) {
+                roomY = roomY - (int)(curr.getLength()*30);
             } else {                        //down
-                roomY = roomY + curr.getLength()*20;
+                roomY = roomY + (int)(curr.getLength()*30);
             }
             path.getElements().add(new LineTo(roomX, roomY));
             curr = curr.next;
