@@ -338,8 +338,8 @@ public class HelloApplication extends Application {
         newNode12.next = newNode13;
         newNode13.next = newNode14;
         newNode14.next = newNode15;
-        newNode15.next = newNode15;
         newNode15.next = newNode16;
+        newNode16.next = newNode16;
 
         return newNode1;
     }
