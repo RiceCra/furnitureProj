@@ -4,10 +4,12 @@ import javafx.scene.control.*;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.collections.*;
 
@@ -20,12 +22,8 @@ public class HelloApplication extends Application {
     private StackPane screen3;
     private StackPane mainContent;
     private Pane room;
-
-
     private ObservableList<FurnitureItem> itemsList;
     private ListView<FurnitureItem> itemsListView;
-
-    // Make the button layout class-level in order to push it to the front completley
     HBox buttonLayout = new HBox();
 
     @Override
@@ -105,7 +103,6 @@ public class HelloApplication extends Application {
     }
 
     private void makeContent1() {
-        /*
         // Screen 1 content
 
         //bed
@@ -131,7 +128,6 @@ public class HelloApplication extends Application {
 
         //rect.setRotate(45);
 
-        */
 
 
     }
@@ -163,7 +159,7 @@ public class HelloApplication extends Application {
         TextField colorField = new TextField();
         colorField.setPromptText("Color");
 
-        CheckBox isPlacedCheckBox = new CheckBox("Shown");
+        CheckBox isPlacedCheckBox = new CheckBox("Is Placed");
 
         Button addItemButton = new Button("Add Item");
         Button editItemButton = new Button("Edit Item");
@@ -264,6 +260,12 @@ public class HelloApplication extends Application {
             try {
                 int length = Integer.parseInt(lengthField.getText());
                 int width = Integer.parseInt(widthField.getText());
+                Color color;
+                if (colorField.getText().isEmpty()) {
+                    color = Color.web("#A9A9A9");
+                } else {
+                    color = Color.web(colorField.getText());
+                }
 
                 selectedFurnitureItem.setLength(length);
                 selectedFurnitureItem.setWidth(width);
@@ -271,7 +273,7 @@ public class HelloApplication extends Application {
                 selectedFurnitureItem.setColor(colorField.getText());
                 selectedFurnitureItem.setPlaced(isPlacedCheckBox.isSelected());
 
-                // Remove only furniture items, needed to preserve the room layout lines when editing items so it doesn't clear everything
+                // Remove only furniture items, needed to making sure the room doesn't get cleared
                 room.getChildren().removeIf(node -> node instanceof spRectangle);
                 for (FurnitureItem item : itemsList) {
                     if (item.isPlaced()) {
@@ -292,7 +294,7 @@ public class HelloApplication extends Application {
         if (selectedFurnitureItem != null) {
             itemsList.remove(selectedFurnitureItem);
 
-            // Remove only furniture items, needed to preserve the room layout lines when editing items so it doesn't clear everything
+            // Remove only furniture items, needed to making sure the room doesn't get cleared
             room.getChildren().removeIf(node -> node instanceof spRectangle);
             for (FurnitureItem item : itemsList) {
                 if (item.isPlaced()) {
@@ -338,8 +340,8 @@ public class HelloApplication extends Application {
         newNode12.next = newNode13;
         newNode13.next = newNode14;
         newNode14.next = newNode15;
+        newNode15.next = newNode15;
         newNode15.next = newNode16;
-        newNode16.next = newNode16;
 
         return newNode1;
     }
