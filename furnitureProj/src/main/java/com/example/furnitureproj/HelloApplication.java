@@ -1,15 +1,16 @@
 package com.example.furnitureproj;
 
+import javafx.scene.control.*;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.collections.*;
+
 
 public class HelloApplication extends Application {
 
@@ -19,6 +20,13 @@ public class HelloApplication extends Application {
     private StackPane screen3;
     private StackPane mainContent;
     private Pane room;
+
+
+    private ObservableList<FurnitureItem> itemsList;
+    private ListView<FurnitureItem> itemsListView;
+
+    // Make the button layout class-level in order to push it to the front completley
+    HBox buttonLayout = new HBox();
 
     @Override
     public void start(Stage primaryStage) {
@@ -30,9 +38,8 @@ public class HelloApplication extends Application {
         // Add content to each screen (this can be customized)
 
         //screen1.getChildren().add(new javafx.scene.control.Label("Your room"));
-        screen2.getChildren().add(new javafx.scene.control.Label("Item Management functionality WIP"));
-        screen3.getChildren().add(new javafx.scene.control.Label("A.I. Functionality WIP"));
-
+        //screen2.getChildren().add(new javafx.scene.control.Label("Item Management functionality WIP"));
+        screen3.getChildren().add(new javafx.scene.control.Label("AI functionality WIP"));
         // Initialize with screen1 displayed
         mainContent = screen1;
 
@@ -41,23 +48,13 @@ public class HelloApplication extends Application {
         Button btnScreen2 = new Button("Your Items");
         Button btnScreen3 = new Button("A.I. Assistant");
 
-        // Layout for buttons (bottom of the window)
-        HBox buttonLayout = new HBox(); // Buttons will be placed horizontally
+
         buttonLayout.getChildren().addAll(btnScreen1, btnScreen2, btnScreen3);
 
         // Set button actions to switch between screens
-        btnScreen1.setOnAction(e -> {
-            switchScreen(mainContent, screen1);
-            //buttonLayout.toFront();
-        });
-        btnScreen2.setOnAction(e -> {
-            switchScreen(mainContent, screen2);
-            //buttonLayout.toFront();
-        });
-        btnScreen2.setOnAction(e -> {
-            switchScreen(mainContent, screen3);
-            //buttonLayout.toFront();
-        });
+        btnScreen1.setOnAction(e -> switchScreen(mainContent, screen1));
+        btnScreen2.setOnAction(e -> switchScreen(mainContent, screen2));
+        btnScreen3.setOnAction(e -> switchScreen(mainContent, screen3));
 
         // Make each button take 1/3rd of the width of the window
         buttonLayout.widthProperty().addListener((obs, oldVal, newVal) -> {
@@ -76,6 +73,8 @@ public class HelloApplication extends Application {
 
         // Add padding and alignment
         buttonLayout.setStyle("-fx-alignment: center; -fx-padding: 0px;");
+        buttonLayout.toFront();
+
 
         // Create the main layout with BorderPane
         BorderPane root = new BorderPane();
@@ -95,6 +94,7 @@ public class HelloApplication extends Application {
         makeDraggable(room, false);
         //drawing the on screen images
         makeContent1();
+        makeContent2();
         drawRoom();
         room.getChildren().forEach(n -> makeDraggable(n, true));
         //make them all draggable
@@ -130,14 +130,184 @@ public class HelloApplication extends Application {
 
         //rect.setRotate(45);
 
-        room.getChildren().add(rect);
-        room.getChildren().add(rect2);
-        room.getChildren().add(rect3);
-        room.getChildren().add(rect4);
-        room.getChildren().add(rect5);
-        room.getChildren().add(rect6);
-        room.getChildren().add(rect7);
 
+
+    }
+
+    private void makeContent2() {
+        // Initialize items list and list view
+        itemsList = FXCollections.observableArrayList();
+        itemsListView = new ListView<>(itemsList);
+        itemsListView.setPrefHeight(150);
+
+        // VBox for organizing item controls vertically
+        VBox itemContainer = new VBox();
+        itemContainer.setSpacing(10);
+        itemContainer.setStyle("-fx-padding: 15px; -fx-alignment: center;");
+
+
+        Button addThroughWebButton = new Button("Add through web");
+        Button editManuallyButton = new Button("Edit manually");
+
+        TextField lengthField = new TextField();
+        lengthField.setPromptText("Length (int)");
+
+        TextField widthField = new TextField();
+        widthField.setPromptText("Width (int)");
+
+        TextField styleField = new TextField();
+        styleField.setPromptText("Style");
+
+        TextField colorField = new TextField();
+        colorField.setPromptText("Color");
+
+        CheckBox isPlacedCheckBox = new CheckBox("Shown");
+
+        Button addItemButton = new Button("Add Item");
+        Button editItemButton = new Button("Edit Item");
+        Button removeItemButton = new Button("Remove Item");
+
+        // Initially hide the fields and buttons for adding, editing, and removing
+        lengthField.setVisible(false);
+        widthField.setVisible(false);
+        styleField.setVisible(false);
+        colorField.setVisible(false);
+        isPlacedCheckBox.setVisible(false);
+        addItemButton.setVisible(false);
+        editItemButton.setVisible(false);
+        removeItemButton.setVisible(false);
+
+        addThroughWebButton.setOnAction(e -> System.out.println("feature not implemented"));
+
+        editManuallyButton.setOnAction(e -> {
+            // Toggle visibility of the editing controls
+            boolean isVisible = lengthField.isVisible();
+            lengthField.setVisible(!isVisible);
+            widthField.setVisible(!isVisible);
+            styleField.setVisible(!isVisible);
+            colorField.setVisible(!isVisible);
+            isPlacedCheckBox.setVisible(!isVisible);
+            addItemButton.setVisible(!isVisible);
+            editItemButton.setVisible(!isVisible);
+            removeItemButton.setVisible(!isVisible);
+        });
+
+        // Action handlers for adding, editing, and removing items
+        addItemButton.setOnAction(e -> addItem(lengthField, widthField, styleField, colorField, isPlacedCheckBox));
+        editItemButton.setOnAction(e -> editSelectedItem(lengthField, widthField, styleField, colorField, isPlacedCheckBox));
+        removeItemButton.setOnAction(e -> removeSelectedItem());
+
+        // Load selected item into fields when an item is selected from the list
+        itemsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, selectedItem) -> {
+            if (selectedItem != null) {
+                lengthField.setText(String.valueOf(selectedItem.getLength()));
+                widthField.setText(String.valueOf(selectedItem.getWidth()));
+                styleField.setText(selectedItem.getStyle());
+                colorField.setText(selectedItem.getColor());
+                isPlacedCheckBox.setSelected(selectedItem.isPlaced());
+            }
+        });
+
+        itemContainer.getChildren().addAll(
+                itemsListView,
+                addThroughWebButton,
+                editManuallyButton,
+                lengthField,
+                widthField,
+                styleField,
+                colorField,
+                isPlacedCheckBox,
+                addItemButton,
+                editItemButton,
+                removeItemButton
+        );
+
+        screen2 .getChildren().add(itemContainer);
+    }
+
+    private void addItem(TextField lengthField, TextField widthField, TextField styleField, TextField colorField, CheckBox isPlacedCheckBox) {
+        try {
+            int length = Integer.parseInt(lengthField.getText());
+            int width = Integer.parseInt(widthField.getText());
+            Color color;
+            if (colorField.getText().isEmpty()) {
+                color = Color.web("#A9A9A9");
+            } else {
+                color = Color.web(colorField.getText());
+            }
+            FurnitureItem newFurnitureItem = new FurnitureItem(length, width, styleField.getText(), colorField.getText(), isPlacedCheckBox.isSelected());
+            itemsList.add(newFurnitureItem);
+
+            if (isPlacedCheckBox.isSelected()) {
+                spRectangle newItem = new spRectangle(length * 30, width * 30, color);
+                newItem.setUserData(newFurnitureItem);
+                room.getChildren().add(newItem);
+                makeDraggable(newItem, true);
+            }
+
+            lengthField.clear();
+            widthField.clear();
+            styleField.clear();
+            colorField.clear();
+            isPlacedCheckBox.setSelected(false);
+
+        } catch (NumberFormatException e) {
+            System.out.println("Please enter valid integer values for length and width.");
+        }
+    }
+
+    private void editSelectedItem(TextField lengthField, TextField widthField, TextField styleField, TextField colorField, CheckBox isPlacedCheckBox) {
+        FurnitureItem selectedFurnitureItem = itemsListView.getSelectionModel().getSelectedItem();
+        if (selectedFurnitureItem != null) {
+            try {
+                int length = Integer.parseInt(lengthField.getText());
+                int width = Integer.parseInt(widthField.getText());
+                Color color;
+                if (colorField.getText().isEmpty()) {
+                    color = Color.web("#A9A9A9");
+                } else {
+                    color = Color.web(colorField.getText());
+                }
+
+                selectedFurnitureItem.setLength(length);
+                selectedFurnitureItem.setWidth(width);
+                selectedFurnitureItem.setStyle(styleField.getText());
+                selectedFurnitureItem.setColor(colorField.getText());
+                selectedFurnitureItem.setPlaced(isPlacedCheckBox.isSelected());
+
+                // Remove only furniture items, needed to preserve the room layout lines when editing items so it doesn't clear everything
+                room.getChildren().removeIf(node -> node instanceof spRectangle);
+                for (FurnitureItem item : itemsList) {
+                    if (item.isPlaced()) {
+                        spRectangle itemRectangle = new spRectangle(item.getLength() * 30, item.getWidth() * 30, Color.web(item.getColor()));
+                        room.getChildren().add(itemRectangle);
+                        makeDraggable(itemRectangle, true);
+                    }
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter valid integer values for length and width.");
+            }
+        }
+    }
+
+    private void removeSelectedItem() {
+        FurnitureItem selectedFurnitureItem = itemsListView.getSelectionModel().getSelectedItem();
+        if (selectedFurnitureItem != null) {
+            itemsList.remove(selectedFurnitureItem);
+
+            // Remove only furniture items, needed to preserve the room layout lines when editing items so it doesn't clear everything
+            room.getChildren().removeIf(node -> node instanceof spRectangle);
+            for (FurnitureItem item : itemsList) {
+                if (item.isPlaced()) {
+                    spRectangle itemRectangle = new spRectangle(item.getLength() * 30, item.getWidth() * 30, Color.web(item.getColor()));
+                    room.getChildren().add(itemRectangle);
+                    makeDraggable(itemRectangle, true);
+                }
+            }
+
+            itemsListView.getSelectionModel().clearSelection();
+        }
     }
 
     private layoutNode createTestNodes() {
@@ -212,6 +382,8 @@ public class HelloApplication extends Application {
         BorderPane root = (BorderPane) currentContent.getParent();
         root.setCenter(newScreen);
         mainContent = newScreen;
+        buttonLayout.toFront();
+
     }
 
     private  double startX;
