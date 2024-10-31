@@ -105,6 +105,7 @@ public class HelloApplication extends Application {
     }
 
     private void makeContent1() {
+        /*
         // Screen 1 content
 
         //bed
@@ -130,6 +131,7 @@ public class HelloApplication extends Application {
 
         //rect.setRotate(45);
 
+        */
 
 
     }
@@ -262,12 +264,6 @@ public class HelloApplication extends Application {
             try {
                 int length = Integer.parseInt(lengthField.getText());
                 int width = Integer.parseInt(widthField.getText());
-                Color color;
-                if (colorField.getText().isEmpty()) {
-                    color = Color.web("#A9A9A9");
-                } else {
-                    color = Color.web(colorField.getText());
-                }
 
                 selectedFurnitureItem.setLength(length);
                 selectedFurnitureItem.setWidth(width);
