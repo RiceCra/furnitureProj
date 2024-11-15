@@ -120,13 +120,22 @@ public class HelloApplication extends Application {
         Rectangle rect4 = new spRectangle((int)(2 * 30), (int)(2 * 30), Color.ORANGE);
 
         //computer monitor
-        Rectangle rect5 = new spRectangle((int)(1.5 * 30), (int)(0.1 * 30), Color.BLACK);
+        Rectangle rect5 = new spRectangle((int)(1.5 * 30), (int)(0.2 * 30), Color.BLACK);
 
         //computer
         Rectangle rect6 = new spRectangle((int)(2 * 30), (int)(0.5 * 30), Color.GREY);
 
         //computer keyboard
-        Rectangle rect7 = new spRectangle((int)(2 * 30), (int)(2 * 30), Color.WHITE);
+        Rectangle rect7 = new spRectangle((int)(1.6 * 30), (int)(0.4 * 30), Color.CORAL);
+
+        //shoerack
+        Rectangle rect8 = new spRectangle((int)(1.2 * 30), (int)(3 * 30), Color.BISQUE);
+
+        //stool
+        Rectangle rect9 = new spRectangle((int)(2 * 30), (int)(2 * 30), Color.DARKORANGE);
+
+        //pillow
+        Rectangle rect10 = new spRectangle((int)(1 * 30), (int)(4 * 30), Color.WHITESMOKE);
 
         //rect.setRotate(45);
 
@@ -137,6 +146,9 @@ public class HelloApplication extends Application {
         room.getChildren().add(rect5);
         room.getChildren().add(rect6);
         room.getChildren().add(rect7);
+        room.getChildren().add(rect8);
+        room.getChildren().add(rect9);
+        room.getChildren().add(rect10);
 
     }
 
