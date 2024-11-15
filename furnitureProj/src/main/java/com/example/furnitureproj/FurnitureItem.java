@@ -3,13 +3,15 @@ package com.example.furnitureproj;
 public class FurnitureItem {
     private int length;
     private int width;
+    private String furnitureType;
     private String style;
     private String color;
     private boolean isPlaced;
 
-    public FurnitureItem(int length, int width, String style, String color, boolean isPlaced) {
+    public FurnitureItem(int length, int width, String furnitureType, String style, String color, boolean isPlaced) {
         this.length = length;
         this.width = width;
+        this.furnitureType = furnitureType;
         this.style = style;
         this.color = color;
         this.isPlaced = isPlaced;
@@ -45,6 +47,9 @@ public class FurnitureItem {
         this.width = width;
     }
 
+    public String getFurnitureType() { return furnitureType; }
+    public void setFurnitureType(String furnitureType) { this.furnitureType = furnitureType; }
+
     public void setStyle(String style) {
         this.style = style;
     }
@@ -59,6 +64,10 @@ public class FurnitureItem {
 
     @Override
     public String toString() {
-        return String.format("Item: %dx%d, Color: %s, Style: %s", length, width, color, style);
+        return String.format("A %s %s %s that is %dx%dft",
+                style.toLowerCase(),
+                color.toLowerCase(),
+                furnitureType.toLowerCase(),
+                width, length);
     }
 }

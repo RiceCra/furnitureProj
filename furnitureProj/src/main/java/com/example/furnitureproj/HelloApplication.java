@@ -153,6 +153,9 @@ public class HelloApplication extends Application {
         TextField widthField = new TextField();
         widthField.setPromptText("Width (int)");
 
+        TextField furnitureTypeField = new TextField();
+        furnitureTypeField.setPromptText("Furniture Type (e.g., chair)");
+
         TextField styleField = new TextField();
         styleField.setPromptText("Style");
 
@@ -168,6 +171,7 @@ public class HelloApplication extends Application {
         // Initially hide the fields and buttons for adding, editing, and removing
         lengthField.setVisible(false);
         widthField.setVisible(false);
+        furnitureTypeField.setVisible(false);
         styleField.setVisible(false);
         colorField.setVisible(false);
         isPlacedCheckBox.setVisible(false);
@@ -182,6 +186,7 @@ public class HelloApplication extends Application {
             boolean isVisible = lengthField.isVisible();
             lengthField.setVisible(!isVisible);
             widthField.setVisible(!isVisible);
+            furnitureTypeField.setVisible(!isVisible);
             styleField.setVisible(!isVisible);
             colorField.setVisible(!isVisible);
             isPlacedCheckBox.setVisible(!isVisible);
@@ -190,16 +195,15 @@ public class HelloApplication extends Application {
             removeItemButton.setVisible(!isVisible);
         });
 
-        // Action handlers for adding, editing, and removing items
-        addItemButton.setOnAction(e -> addItem(lengthField, widthField, styleField, colorField, isPlacedCheckBox));
-        editItemButton.setOnAction(e -> editSelectedItem(lengthField, widthField, styleField, colorField, isPlacedCheckBox));
+        addItemButton.setOnAction(e -> addItem(lengthField, widthField, furnitureTypeField, styleField, colorField, isPlacedCheckBox));
+        editItemButton.setOnAction(e -> editSelectedItem(lengthField, widthField, furnitureTypeField, styleField, colorField, isPlacedCheckBox));
         removeItemButton.setOnAction(e -> removeSelectedItem());
 
-        // Load selected item into fields when an item is selected from the list
         itemsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, selectedItem) -> {
             if (selectedItem != null) {
                 lengthField.setText(String.valueOf(selectedItem.getLength()));
                 widthField.setText(String.valueOf(selectedItem.getWidth()));
+                furnitureTypeField.setText(selectedItem.getFurnitureType());
                 styleField.setText(selectedItem.getStyle());
                 colorField.setText(selectedItem.getColor());
                 isPlacedCheckBox.setSelected(selectedItem.isPlaced());
@@ -212,6 +216,7 @@ public class HelloApplication extends Application {
                 editManuallyButton,
                 lengthField,
                 widthField,
+                furnitureTypeField,
                 styleField,
                 colorField,
                 isPlacedCheckBox,
@@ -220,10 +225,10 @@ public class HelloApplication extends Application {
                 removeItemButton
         );
 
-        screen2 .getChildren().add(itemContainer);
+        screen2.getChildren().add(itemContainer);
     }
 
-    private void addItem(TextField lengthField, TextField widthField, TextField styleField, TextField colorField, CheckBox isPlacedCheckBox) {
+    private void addItem(TextField lengthField, TextField widthField, TextField furnitureTypeField, TextField styleField, TextField colorField, CheckBox isPlacedCheckBox) {
         try {
             int length = Integer.parseInt(lengthField.getText());
             int width = Integer.parseInt(widthField.getText());
@@ -233,7 +238,13 @@ public class HelloApplication extends Application {
             } else {
                 color = Color.web(colorField.getText());
             }
-            FurnitureItem newFurnitureItem = new FurnitureItem(length, width, styleField.getText(), colorField.getText(), isPlacedCheckBox.isSelected());
+            String furnitureType;
+            if (furnitureTypeField.getText().isEmpty()) {
+                furnitureType = "furniture";
+            } else {
+                furnitureType = furnitureTypeField.getText();
+            }
+            FurnitureItem newFurnitureItem = new FurnitureItem(length, width, furnitureType, styleField.getText(), colorField.getText(), isPlacedCheckBox.isSelected());
             itemsList.add(newFurnitureItem);
 
             if (isPlacedCheckBox.isSelected()) {
@@ -254,22 +265,19 @@ public class HelloApplication extends Application {
         }
     }
 
-    private void editSelectedItem(TextField lengthField, TextField widthField, TextField styleField, TextField colorField, CheckBox isPlacedCheckBox) {
+    private void editSelectedItem(TextField lengthField, TextField widthField, TextField furnitureTypeField, TextField styleField, TextField colorField, CheckBox isPlacedCheckBox) {
         FurnitureItem selectedFurnitureItem = itemsListView.getSelectionModel().getSelectedItem();
         if (selectedFurnitureItem != null) {
             try {
                 int length = Integer.parseInt(lengthField.getText());
                 int width = Integer.parseInt(widthField.getText());
-                Color color;
-                if (colorField.getText().isEmpty()) {
-                    color = Color.web("#A9A9A9");
-                } else {
-                    color = Color.web(colorField.getText());
-                }
+                String furnitureType = furnitureTypeField.getText();
+                String style = styleField.getText();
 
                 selectedFurnitureItem.setLength(length);
                 selectedFurnitureItem.setWidth(width);
-                selectedFurnitureItem.setStyle(styleField.getText());
+                selectedFurnitureItem.setFurnitureType(furnitureType);
+                selectedFurnitureItem.setStyle(style);
                 selectedFurnitureItem.setColor(colorField.getText());
                 selectedFurnitureItem.setPlaced(isPlacedCheckBox.isSelected());
 
